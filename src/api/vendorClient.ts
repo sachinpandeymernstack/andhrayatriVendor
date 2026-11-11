@@ -27,7 +27,22 @@ function resolveRequestCredentials(url: string, override?: RequestCredentials): 
 
 export function extractErrorMessage(payload: unknown, fallback = 'Request failed'): string {
   if (!payload) return fallback;
-  if (typeof payload === 'string') return payload;
+  if (typeof payload === 'string') {
+    const trimmed = payload.trim();
+    if (trimmed.startsWith('<') || trimmed.includes('<!doctype') || trimmed.includes('<html')) {
+      if (trimmed.includes('404') || trimmed.includes('Not Found')) {
+        return 'Vendor service endpoint was not found on the server (404).';
+      }
+      if (trimmed.includes('502') || trimmed.includes('Bad Gateway')) {
+        return 'Unable to reach the server gateway (502 Bad Gateway).';
+      }
+      if (trimmed.includes('500') || trimmed.includes('Internal Server Error')) {
+        return 'Internal server error (500). Please try again shortly.';
+      }
+      return fallback;
+    }
+    return trimmed;
+  }
   if (typeof payload === 'object') {
     const record = payload as Record<string, unknown>;
     const candidate = record.message || record.error || record.detail;

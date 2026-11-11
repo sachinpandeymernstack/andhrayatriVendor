@@ -311,6 +311,20 @@ export function VendorLoginPage() {
                     >
                       🛍️ Shopping Partner
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => fillQuickDemo('activities@example.com', 'Pass@123')}
+                      className="cursor-pointer rounded-lg border border-emerald-200 bg-white px-2.5 py-1 text-xs font-bold text-emerald-800 shadow-2xs hover:bg-emerald-50 transition"
+                    >
+                      🧭 Activities Partner
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fillQuickDemo('attractions@example.com', 'Pass@123')}
+                      className="cursor-pointer rounded-lg border border-purple-200 bg-white px-2.5 py-1 text-xs font-bold text-purple-800 shadow-2xs hover:bg-purple-50 transition"
+                    >
+                      🏛️ Attractions Partner
+                    </button>
                   </div>
                 </div>
 

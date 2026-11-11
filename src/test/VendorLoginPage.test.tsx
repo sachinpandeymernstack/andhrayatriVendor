@@ -94,4 +94,49 @@ describe('VendorLoginPage', () => {
 
     expect(await screen.findByText('Hotel Partner Suite')).toBeInTheDocument();
   });
+
+  it('handles backend 404 HTML response gracefully by falling back to pre-seeded demo partner accounts', async () => {
+    const user = userEvent.setup();
+
+    // Mock backend returning 404 HTML (reproducing the exact issue from the user screenshot)
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(
+        '<!doctype html> <html lang="en"> <head> <title>Not Found</title> </head> <body> <h1>Not Found</h1> <p>The requested resource was not found on this server.</p> </body> </html>',
+        { status: 404, headers: { 'Content-Type': 'text/html' } },
+      ),
+    );
+
+    renderAtRoute('/login');
+
+    // Click the 1-click Quick Demo Hotel Partner button
+    await user.click(screen.getByRole('button', { name: /🏨 Hotel Partner/i }));
+    await user.click(screen.getByRole('button', { name: /^Login$/i }));
+
+    // Must successfully land on Hotel Partner Suite without displaying any raw HTML error tags
+    expect(await screen.findByText('Hotel Partner Suite')).toBeInTheDocument();
+    expect(screen.queryByText(/<!doctype/i)).not.toBeInTheDocument();
+  });
+
+  it('displays a friendly error message and sanitizes raw HTML when non-demo credentials fail with 404', async () => {
+    const user = userEvent.setup();
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(
+        '<!doctype html> <html lang="en"> <head> <title>Not Found</title> </head> <body> <h1>Not Found</h1> <p>The requested resource was not found on this server.</p> </body> </html>',
+        { status: 404, headers: { 'Content-Type': 'text/html' } },
+      ),
+    );
+
+    renderAtRoute('/login');
+
+    await user.type(screen.getByPlaceholderText('business@example.com'), 'unknown@example.com');
+    await user.type(screen.getByPlaceholderText('Enter password'), 'RandomPassword123!');
+    await user.click(screen.getByRole('button', { name: /^Login$/i }));
+
+    expect(
+      await screen.findByText(/Invalid credentials or partner account not found/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/<!doctype/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/The requested resource was not found/i)).not.toBeInTheDocument();
+  });
 });

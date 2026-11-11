@@ -8,7 +8,6 @@ import {
   Phone,
   ShieldCheck,
   Sparkles,
-  UserPlus,
 } from 'lucide-react';
 import logoImg from '@/assets/logo.png';
 import aptdcLogo from '@/assets/aptdc-logo.png';
@@ -21,7 +20,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useVendorAuth } from '@/context/VendorAuthContext';
-import { cn } from '@/lib/utils';
 
 const MAIN_SITE_URL = (import.meta.env.VITE_MAIN_SITE_URL || 'https://andhrayatri.com').replace(
   /\/+$/,
@@ -33,7 +31,7 @@ interface VendorPortalHeaderProps {
 }
 
 export function VendorPortalHeader({ onOpenSupport }: VendorPortalHeaderProps) {
-  const { isAuthenticated, vendor, dashboardConfig, normalizedStatus, logout } = useVendorAuth();
+  const { isAuthenticated, vendor, dashboardConfig, logout } = useVendorAuth();
   const location = useLocation();
   const isSignup = location.pathname.includes('signup') || location.pathname.includes('register');
   const isLogin = location.pathname.includes('login');

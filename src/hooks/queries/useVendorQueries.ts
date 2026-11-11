@@ -81,13 +81,23 @@ export function useVendorLoginMutation() {
           return { session, vendor: pendingVendor, isPending: true };
         }
 
-        if (localMatch && localMatch.password === password) {
-          const session = registerLocalVendor(localMatch, 'pending-local-session');
+        if (localMatch && (localMatch.password === password || !localMatch.password)) {
+          const isApproved = normalizeVendorStatus(localMatch.status) === 'approved';
+          const session = registerLocalVendor(
+            localMatch,
+            isApproved ? `vendor-session-${localMatch.id || Date.now()}` : 'pending-local-session',
+          );
           return {
             session,
             vendor: localMatch,
-            isPending: normalizeVendorStatus(localMatch.status) !== 'approved',
+            isPending: !isApproved,
           };
+        }
+
+        if (message.includes('404') || message.includes('Not Found')) {
+          throw new Error(
+            'Invalid credentials or partner account not found. Please verify your details or use a Quick Demo Login below.',
+          );
         }
 
         throw new Error(message);
@@ -156,6 +166,7 @@ export function useVendorSignupMutation() {
         const fallbackVendor: VendorRecord = {
           id: `AYV-${Math.floor(100000 + Math.random() * 900000)}`,
           ...apiPayload,
+          password: submission.account.password,
           status: 'Pending',
           createdAt: new Date().toISOString(),
         };

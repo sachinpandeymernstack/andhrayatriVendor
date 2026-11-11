@@ -74,16 +74,126 @@ export function saveLocalVendor(vendor: VendorRecord): void {
   win.localStorage.setItem(LOCAL_VENDORS_KEY, JSON.stringify(vendors));
 }
 
+export const DEFAULT_DEMO_VENDORS: VendorRecord[] = [
+  {
+    id: 'demo-hotel-vendor',
+    _id: 'demo-hotel-vendor',
+    businessName: 'Grand Haritha Beach Resort & Convention',
+    ownerName: 'Raghavendra Rao',
+    email: 'hotel@example.com',
+    password: 'Pass@123',
+    phone: '+91 98480 22338',
+    category: 'hotels',
+    categoryId: 'hotels',
+    status: 'Approved',
+    city: 'Visakhapatnam',
+    state: 'Andhra Pradesh',
+    pincode: '530003',
+    description: 'Premier seaside luxury resort overlooking Rushikonda Beach with 64 executive sea-view rooms and multi-cuisine dining.',
+  },
+  {
+    id: 'demo-restaurant-vendor',
+    _id: 'demo-restaurant-vendor',
+    businessName: 'Konaseema Ruchulu Grand Kitchen',
+    ownerName: 'Sita Devi Varma',
+    email: 'restaurant@example.com',
+    password: 'Pass@123',
+    phone: '+91 98491 55421',
+    category: 'restaurants',
+    categoryId: 'restaurants',
+    status: 'Approved',
+    city: 'Rajahmundry',
+    state: 'Andhra Pradesh',
+    pincode: '533101',
+    description: 'Authentic Godavari riverbed flavors, Natu Kodi biryani, Potlam biryani, and regional coastal Andhra thalis.',
+  },
+  {
+    id: 'demo-shopping-vendor',
+    _id: 'demo-shopping-vendor',
+    businessName: 'Lepakshi Heritage Weaves & Handicrafts',
+    ownerName: 'Venkata Subbaiah',
+    email: 'shopping@example.com',
+    password: 'Pass@123',
+    phone: '+91 94401 88732',
+    category: 'shopping',
+    categoryId: 'shopping',
+    status: 'Approved',
+    city: 'Vijayawada',
+    state: 'Andhra Pradesh',
+    pincode: '520002',
+    description: 'Master handloom Uppada silk sarees, GI-tagged Kondapalli softwood toys, and handcrafted brass artifacts.',
+  },
+  {
+    id: 'demo-activities-vendor',
+    _id: 'demo-activities-vendor',
+    businessName: 'Araku Adventure Trails & Tribal Expeditions',
+    ownerName: 'Kishore Varma',
+    email: 'activities@example.com',
+    password: 'Pass@123',
+    phone: '+91 94402 33411',
+    category: 'activities',
+    categoryId: 'activities',
+    status: 'Approved',
+    city: 'Araku Valley',
+    state: 'Andhra Pradesh',
+    pincode: '531149',
+    description: 'Guided Borra Caves treks, Katiki waterfalls trails, and Eastern Ghats camping experiences.',
+  },
+  {
+    id: 'demo-attractions-vendor',
+    _id: 'demo-attractions-vendor',
+    businessName: 'Amaravati Heritage Museum & Cultural Center',
+    ownerName: 'Dr. Madhava Rao',
+    email: 'attractions@example.com',
+    password: 'Pass@123',
+    phone: '+91 98485 77622',
+    category: 'attractions',
+    categoryId: 'attractions',
+    status: 'Approved',
+    city: 'Amaravati',
+    state: 'Andhra Pradesh',
+    pincode: '522020',
+    description: 'Historic Buddhist stūpa exhibitions, sound & light shows, and archeological heritage galleries.',
+  },
+  {
+    id: 'demo-pending-hotel-vendor',
+    _id: 'demo-pending-hotel-vendor',
+    businessName: 'Coastal Horizon Stay',
+    ownerName: 'Bhanu Murthy',
+    email: 'pendinghotel@example.com',
+    password: 'Pass@123',
+    phone: '+91 98482 11990',
+    category: 'hotels',
+    categoryId: 'hotels',
+    status: 'Pending',
+    city: 'Visakhapatnam',
+    state: 'Andhra Pradesh',
+    pincode: '530017',
+    description: 'Boutique stay pending AP Tourism accreditation and document verification.',
+  },
+];
+
 export function findLocalVendor(email?: string, password?: string): VendorRecord | null {
   const normalizedEmail = (email || '').trim().toLowerCase();
-  return (
-    getLocalVendors().find((entry) => {
-      const sameEmail = (entry.email || '').trim().toLowerCase() === normalizedEmail;
-      if (!sameEmail) return false;
-      if (password === undefined) return true;
-      return entry.password === password;
-    }) || null
-  );
+  if (!normalizedEmail) return null;
+
+  // 1. Check user-created vendors from localStorage
+  const localMatch = getLocalVendors().find((entry) => {
+    const sameEmail = (entry.email || '').trim().toLowerCase() === normalizedEmail;
+    if (!sameEmail) return false;
+    if (password === undefined) return true;
+    return entry.password === password;
+  });
+  if (localMatch) return localMatch;
+
+  // 2. Fall back to pre-seeded demo partner vendor accounts
+  const demoMatch = DEFAULT_DEMO_VENDORS.find((entry) => {
+    const sameEmail = (entry.email || '').trim().toLowerCase() === normalizedEmail;
+    if (!sameEmail) return false;
+    if (password === undefined) return true;
+    return entry.password === password;
+  });
+  return demoMatch || null;
 }
 
 export function normalizeVendorStatus(status?: string | null): string {
