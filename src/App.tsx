@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { MotionConfig } from 'framer-motion';
 import { VendorAuthProvider } from '@/context/VendorAuthContext';
 import { VendorNotificationProvider } from '@/context/VendorNotificationContext';
@@ -52,11 +51,6 @@ export function VendorAppProviders({
   children: React.ReactNode;
   queryClient?: QueryClient;
 }) {
-  const showDevtools =
-    import.meta.env.DEV &&
-    typeof navigator !== 'undefined' &&
-    !navigator.userAgent?.toLowerCase().includes('jsdom');
-
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">
@@ -76,7 +70,6 @@ export function VendorAppProviders({
           </VendorAuthProvider>
         </VendorNotificationProvider>
       </MotionConfig>
-      {showDevtools && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }
