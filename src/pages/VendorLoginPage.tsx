@@ -285,49 +285,6 @@ export function VendorLoginPage() {
                     <p className="text-xs font-semibold text-rose-600">{errors.password.message}</p>
                   )}
                 </div>
-
-                {/* Quick Demo Credentials for Fast Review */}
-                <div className="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3">
-                  <p className="text-[11px] font-bold text-slate-600">Quick Demo Logins (1-Click Fill):</p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => fillQuickDemo('hotel@example.com', 'Pass@123')}
-                      className="cursor-pointer rounded-lg border border-violet-200 bg-white px-2.5 py-1 text-xs font-bold text-primary shadow-2xs hover:bg-violet-50 transition"
-                    >
-                      🏨 Hotel Partner
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fillQuickDemo('restaurant@example.com', 'Pass@123')}
-                      className="cursor-pointer rounded-lg border border-amber-200 bg-white px-2.5 py-1 text-xs font-bold text-amber-900 shadow-2xs hover:bg-amber-50 transition"
-                    >
-                      🍽️ Restaurant Partner
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fillQuickDemo('shopping@example.com', 'Pass@123')}
-                      className="cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-                    >
-                      🛍️ Shopping Partner
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fillQuickDemo('activities@example.com', 'Pass@123')}
-                      className="cursor-pointer rounded-lg border border-emerald-200 bg-white px-2.5 py-1 text-xs font-bold text-emerald-800 shadow-2xs hover:bg-emerald-50 transition"
-                    >
-                      🧭 Activities Partner
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fillQuickDemo('attractions@example.com', 'Pass@123')}
-                      className="cursor-pointer rounded-lg border border-purple-200 bg-white px-2.5 py-1 text-xs font-bold text-purple-800 shadow-2xs hover:bg-purple-50 transition"
-                    >
-                      🏛️ Attractions Partner
-                    </button>
-                  </div>
-                </div>
-
                 <Button
                   type="submit"
                   size="lg"
